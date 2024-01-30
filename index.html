@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.3.0/math.min.js" integrity="sha512-k2XqlNMT3e0wVsA5tq6GAYn50wC6/vLk4jS5ytmtEz5ZOcug2eOzQtn8N3Q5Jd61kjLtjTjvZMIHISovqG6aMw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    function gen(){
+        // const main = document.getElementById("main");
+        // const key0 = document.createElement("button");
+        // key0.innerText = 0;
+        // key0.onclick = show;
+        // key0.dataset.value = 0;
+        // main.appendChild(key0);
+
+        const result = document.getElementById("result");
+        const d_1_to_3 = document.getElementById("1_to_3");
+        const d_4_to_6 = document.getElementById("4_to_6");
+        const d_7_to_9 = document.getElementById("7_to_9");
+        const bottom = document.getElementById("bottom");
+        const mem = document.getElementById("mem");
+        const rows = [d_1_to_3,d_4_to_6,d_7_to_9];
+
+        let opstack = [];
+        
+        let result_bar = document.createElement("span");
+        result_bar.innerHTML = "";
+        result_bar.isContentEditable = false;
+        result_bar.style = "border: 1px solid black; width: 320px; display: inline-block; overflow: hidden;"
+        result.appendChild(result_bar);
+
+        let rownum = 0;
+        for(let i=0;i<9;i++){
+            const child = document.createElement("button");
+            child.style = "width: 80px; height: 80px;";
+            child.innerText = i+1;
+            child.onclick = display_add(result_bar,child.innerText);
+            rows[Math.floor(rownum/3)].appendChild(child);
+            rownum++;
+        }
+
+        const zero = document.createElement("button");
+        zero.style = "width: 80px; height: 80px";
+        zero.innerText = "0";
+        zero.onclick = display_add(result_bar,zero.innerText);
+        bottom.appendChild(zero);
+
+        const point = document.createElement("button");
+        point.style = "width: 80px; height: 80px";
+        point.innerText = ".";
+        point.onclick = display_add(result_bar,point.innerText);
+        bottom.appendChild(point);
+
+        const equals = document.createElement("button");
+        equals.style = "width: 80px; height: 80px";
+        equals.innerText = "=";
+        equals.onclick = get_math_result(result_bar, opstack);
+        bottom.appendChild(equals);
+
+        const ac = document.createElement("button");
+        ac.style = "width: 80px; height: 80px";
+        ac.innerText = "AC";
+        ac.onclick = display_clear(result_bar, opstack);
+        mem.appendChild(ac);
+
+        const prev = document.createElement("button");
+        prev.style = "width: 160px; height: 80px";
+        prev.innerText = "prev";
+        prev.onclick = prev_result(result_bar, opstack);
+        mem.appendChild(prev);
+
+        const plus = document.createElement("button");
+        plus.style = "width: 80px; height: 80px";
+        plus.innerText = "+";
+        plus.onclick = display_add(result_bar,plus.innerText);
+        d_1_to_3.appendChild(plus);
+
+        const minus = document.createElement("button");
+        minus.style = "width: 80px; height: 80px";
+        minus.innerText = "-";
+        minus.onclick = display_add(result_bar,minus.innerText);
+        d_4_to_6.appendChild(minus);
+
+        const mul = document.createElement("button");
+        mul.style = "width: 80px; height: 80px";
+        mul.innerText = "*";
+        mul.onclick = display_add(result_bar,mul.innerText);
+        d_7_to_9.appendChild(mul);
+
+        const div = document.createElement("button");
+        div.style = "width: 80px; height: 80px";
+        div.innerText = "/";
+        div.onclick = display_add(result_bar,div.innerText);
+        bottom.appendChild(div);
+
+        const pow = document.createElement("button");
+        pow.style = "width: 80px; height: 80px";
+        pow.innerText = "^";
+        pow.onclick = display_add(result_bar,pow.innerText);
+        mem.appendChild(pow);
+    }
+    function display_add(element, value){
+        function inner(){
+            element.innerText += value;
+        }
+        return inner;
+    }
+    function get_math_result(element, opstack){
+        function inner(){
+            opstack.push(element.innerText);
+            element.innerText = math.evaluate(element.innerText);
+        }
+        return inner;
+    }
+    function prev_result(element, opstack){
+        function inner(){
+            if(opstack.length>0){
+                prevres = opstack.pop();
+                element.innerText = prevres;
+            }
+            else{
+                element.innerText = "";
+            }
+        }
+        return inner;
+    }
+    function display_clear(element, opstack){
+        function inner(){
+            opstack.splice(0,opstack.length);
+            element.innerText = "";
+        }
+        return inner;
+    }
+</script>
+</head>
+    <body onload="gen()">
+    <div id="result">
+
+    </div>
+    <div id="1_to_3">
+        
+    </div>
+    <div id="4_to_6">
+
+    </div>
+    <div id="7_to_9">
+
+    </div>
+    <div id="bottom"> <!-- 0 . = -->
+
+    </div>
+    <div id="mem"> <!-- AC prev -->
+
+    </div>
+    </body>
+</html>
